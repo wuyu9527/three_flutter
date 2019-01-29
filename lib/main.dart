@@ -1,6 +1,33 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-void main() => runApp(MyApp());
+import 'package:flutter/material.dart';
+import 'package:english_words/english_words.dart';
+
+Future main() async {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    reportErrorAndLog(details);
+  };
+
+  runZoned(() => runApp(MyApp()), zoneSpecification: ZoneSpecification(
+    print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
+      collectLog(line); //手机日志
+    },
+  ), onError: (Object obj, StackTrace stack) {
+    var details = makeDetails(obj, stack);
+    reportErrorAndLog(details);
+  });
+}
+
+void collectLog(String line) {
+  //收集日志
+}
+void reportErrorAndLog(FlutterErrorDetails details) {
+  //上报错误和日志逻辑
+}
+
+FlutterErrorDetails makeDetails(Object obj, StackTrace stack) {
+  // 构建错误信息
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -11,6 +38,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
+        routes: {
+          "my_page": (context) => NewRoute(),
+        },
         home: MyHomePage(title: 'Flutter Demo Home Page'));
   }
 }
@@ -106,11 +136,10 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('open new route'),
               textColor: Colors.blue,
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return NewRoute();
-                }));
+                Navigator.pushNamed(context, "my_page");
               },
-            )
+            ),
+            RandomWordsWidget(),
           ],
         ),
       ),
@@ -120,5 +149,23 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class RandomWordsWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    try {
+      final wordPair = WordPair.random();
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(wordPair.toString()),
+      );
+    } catch (e, stack) {
+      ErrorWidget.builder(FlutterErrorDetails(
+          context: 'building $this', exception: e, stack: stack));
+    }
+
+    return null;
   }
 }
