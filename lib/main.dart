@@ -27,6 +27,7 @@ void reportErrorAndLog(FlutterErrorDetails details) {
 
 FlutterErrorDetails makeDetails(Object obj, StackTrace stack) {
   // 构建错误信息
+  return null;
 }
 
 class MyApp extends StatelessWidget {
