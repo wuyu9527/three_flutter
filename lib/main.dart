@@ -18,17 +18,14 @@ Future main() async {
   });
 }
 
-void collectLog(String line) {
-  //收集日志
-}
+///收集日志
+void collectLog(String line) {}
 
-void reportErrorAndLog(FlutterErrorDetails details) {
-  //上报错误和日志逻辑
-}
+///上报错误和日志逻辑
+void reportErrorAndLog(FlutterErrorDetails details) {}
 
+/// 构建错误信息
 FlutterErrorDetails makeDetails(Object obj, StackTrace stack) {
-  // 构建错误信息
-
   return null;
 }
 
